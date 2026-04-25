@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { createLogger } from '@affex/observability-core';
 import { BaseEnvSchema, parseEnv } from '@affex/shared-types';
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
@@ -10,7 +10,6 @@ async function bootstrap() {
   const log = createLogger({
     service: 'starter-nest',
     level: env.LOG_LEVEL,
-    pretty: env.NODE_ENV !== 'production',
   });
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {

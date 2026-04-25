@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { createLogger, type Logger } from '@affex/observability-core';
+import { type Logger, createLogger } from '@affex/observability-core';
 
 export interface MigrationOptions {
   databaseUrl: string;

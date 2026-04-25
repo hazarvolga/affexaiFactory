@@ -13,10 +13,15 @@ export const BaseEnvSchema = z.object({
 });
 export type BaseEnv = z.infer<typeof BaseEnvSchema>;
 
-export function parseEnv<T extends z.ZodTypeAny>(schema: T, source: NodeJS.ProcessEnv = process.env): z.infer<T> {
+export function parseEnv<T extends z.ZodTypeAny>(
+  schema: T,
+  source: NodeJS.ProcessEnv = process.env,
+): z.infer<T> {
   const result = schema.safeParse(source);
   if (!result.success) {
-    const issues = result.error.issues.map((i) => `  - ${i.path.join('.')}: ${i.message}`).join('\n');
+    const issues = result.error.issues
+      .map((i) => `  - ${i.path.join('.')}: ${i.message}`)
+      .join('\n');
     throw new Error(`Invalid environment variables:\n${issues}`);
   }
   return result.data;

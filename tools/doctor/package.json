@@ -1,40 +1,40 @@
 {
-  "name": "@affex/shared-types",
+  "name": "@affex/doctor",
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
-  "description": "Cross-package Zod schemas and inferred TypeScript types.",
+  "description": "Repo health checker. Enforces layer boundaries, detects drift, runs dep audit.",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "bin": {
+    "doctor": "./dist/index.js"
+  },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+    ".": "./dist/index.js"
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup src/index.ts --format esm --dts --target node22 --clean",
+    "dev": "tsx src/index.ts",
+    "start": "tsx src/index.ts",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "zod": "^3.24.1"
+    "kleur": "^4.1.5"
   },
   "devDependencies": {
     "@affex/shared-config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.5",
     "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },
   "affex": {
-    "layer": "ACTIVE_NOW"
+    "layer": "ACTIVE_NOW",
+    "role": "tool"
   }
 }

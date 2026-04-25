@@ -9,7 +9,9 @@ export interface RetryOptions {
 const defaultShouldRetry = (err: unknown): boolean => {
   if (err instanceof Error) {
     const msg = err.message.toLowerCase();
-    return msg.includes('429') || msg.includes('timeout') || msg.includes('network') || msg.includes('5');
+    return (
+      msg.includes('429') || msg.includes('timeout') || msg.includes('network') || msg.includes('5')
+    );
   }
   return false;
 };

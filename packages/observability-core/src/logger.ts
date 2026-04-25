@@ -1,5 +1,5 @@
-import { pino, type Logger as PinoLogger, type LoggerOptions as PinoLoggerOptions } from 'pino';
 import type { LogLevel } from '@affex/shared-types';
+import { type Logger as PinoLogger, type LoggerOptions as PinoLoggerOptions, pino } from 'pino';
 
 export type Logger = PinoLogger;
 
@@ -19,7 +19,13 @@ export function createLogger(opts: LoggerOptions): Logger {
     base: { service, ...base },
     timestamp: pino.stdTimeFunctions.isoTime,
     redact: {
-      paths: ['req.headers.authorization', 'req.headers.cookie', '*.password', '*.token', '*.secret'],
+      paths: [
+        'req.headers.authorization',
+        'req.headers.cookie',
+        '*.password',
+        '*.token',
+        '*.secret',
+      ],
       remove: true,
     },
   };

@@ -24,7 +24,7 @@
   "scripts": {
     "build": "echo 'no build (config-only package)'",
     "lint": "biome check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "echo 'no typecheck (config-only package)'",
     "test": "echo 'no tests'",
     "clean": "echo 'nothing to clean'"
   },

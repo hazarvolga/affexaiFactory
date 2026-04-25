@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
 import { SlugSchema } from '@affex/shared-types';
 import kleur from 'kleur';
 import prompts from 'prompts';
@@ -16,8 +16,18 @@ interface TemplateDef {
 }
 
 const TEMPLATES: TemplateDef[] = [
-  { id: 'nest-saas', starter: 'apps/_starter-nest', description: 'NestJS API + worker', layer: 'ACTIVE_NOW' },
-  { id: 'next-app', starter: 'apps/_starter-next', description: 'Next.js 14 (App Router)', layer: 'ACTIVE_NOW' },
+  {
+    id: 'nest-saas',
+    starter: 'apps/_starter-nest',
+    description: 'NestJS API + worker',
+    layer: 'ACTIVE_NOW',
+  },
+  {
+    id: 'next-app',
+    starter: 'apps/_starter-next',
+    description: 'Next.js 14 (App Router)',
+    layer: 'ACTIVE_NOW',
+  },
 ];
 
 interface FeatureDef {
@@ -44,7 +54,12 @@ function tokenReplace(content: string, tokens: Record<string, string>): string {
   );
 }
 
-function copyDir(src: string, dest: string, tokens: Record<string, string>, skip: string[] = []): void {
+function copyDir(
+  src: string,
+  dest: string,
+  tokens: Record<string, string>,
+  skip: string[] = [],
+): void {
   mkdirSync(dest, { recursive: true });
   for (const entry of readdirSync(src)) {
     if (skip.includes(entry)) continue;
@@ -131,7 +146,9 @@ async function main(): Promise<void> {
   pkg.name = `@affex/${responses.name}`;
   pkg.version = '0.0.1';
   pkg.description = `${responses.name} — generated from ${template.id}`;
-  delete pkg.affex.role;
+  if (pkg.affex && 'role' in pkg.affex) {
+    pkg.affex = { layer: pkg.affex.layer };
+  }
   writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
   const readmePath = join(appDir, 'README.md');
@@ -161,7 +178,7 @@ async function main(): Promise<void> {
   console.log(kleur.dim('\n  installing dependencies...'));
   execSync('pnpm install', { cwd: REPO_ROOT, stdio: 'inherit' });
 
-  console.log(kleur.green(`\n  ✓ done. next:\n`));
+  console.log(kleur.green('\n  ✓ done. next:\n'));
   console.log(`    cd ${relative(process.cwd(), appDir)}`);
   console.log('    pnpm dev\n');
 }

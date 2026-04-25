@@ -14,9 +14,10 @@ export interface LangfuseOptions {
 }
 
 export function enableLangfuse(_opts: LangfuseOptions): LangfuseHandle {
-  let mod: { Langfuse: new (o: LangfuseOptions) => unknown } | null = null;
+  type LangfuseModule = { Langfuse: new (o: LangfuseOptions) => unknown };
+  let mod: LangfuseModule;
   try {
-    mod = require('langfuse') as typeof mod;
+    mod = require('langfuse') as LangfuseModule;
   } catch {
     throw new Error(
       "@affex/observability-core: enableLangfuse() requires the optional peer dependency 'langfuse'. Install it in the consuming app: pnpm add langfuse",

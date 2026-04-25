@@ -1,4 +1,4 @@
-import { createLogger, type Logger } from '@affex/observability-core';
+import { type Logger, createLogger } from '@affex/observability-core';
 
 export interface PrismaClientLike {
   $connect(): Promise<void>;
@@ -14,9 +14,10 @@ export interface CreatePrismaOptions {
 }
 
 export function createPrisma(opts: CreatePrismaOptions): PrismaClientLike {
-  let mod: { PrismaClient: new (cfg: unknown) => PrismaClientLike } | null = null;
+  type PrismaModule = { PrismaClient: new (cfg: unknown) => PrismaClientLike };
+  let mod: PrismaModule;
   try {
-    mod = require('@prisma/client') as typeof mod;
+    mod = require('@prisma/client') as PrismaModule;
   } catch {
     throw new Error(
       "@affex/db-core: createPrisma() requires the optional peer dependency '@prisma/client'. Install it: pnpm add prisma @prisma/client && npx prisma generate",

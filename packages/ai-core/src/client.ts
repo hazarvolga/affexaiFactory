@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { LRUCache } from './cache.js';
-import { withRetry, type RetryOptions } from './retry.js';
+import { type RetryOptions, withRetry } from './retry.js';
 import type { ChatRequest, ChatResponse, ProviderConfig } from './types.js';
 
 export interface LLMClientOptions {
@@ -58,9 +58,12 @@ function hashRequest(req: ChatRequest): string {
 }
 
 function loadAnthropic(opts: ProviderConfig): AnthropicSdk {
-  let mod: { default: new (cfg: { apiKey: string; baseURL?: string }) => AnthropicSdk } | null = null;
+  type AnthropicModule = {
+    default: new (cfg: { apiKey: string; baseURL?: string }) => AnthropicSdk;
+  };
+  let mod: AnthropicModule;
   try {
-    mod = require('@anthropic-ai/sdk') as typeof mod;
+    mod = require('@anthropic-ai/sdk') as AnthropicModule;
   } catch {
     throw new Error(
       "@affex/ai-core: provider 'anthropic' requires the optional peer dependency '@anthropic-ai/sdk'. Install it: pnpm add @anthropic-ai/sdk",
@@ -70,9 +73,10 @@ function loadAnthropic(opts: ProviderConfig): AnthropicSdk {
 }
 
 function loadOpenAI(opts: ProviderConfig): OpenAISdk {
-  let mod: { default: new (cfg: { apiKey: string; baseURL?: string }) => OpenAISdk } | null = null;
+  type OpenAIModule = { default: new (cfg: { apiKey: string; baseURL?: string }) => OpenAISdk };
+  let mod: OpenAIModule;
   try {
-    mod = require('openai') as typeof mod;
+    mod = require('openai') as OpenAIModule;
   } catch {
     throw new Error(
       "@affex/ai-core: provider 'openai' requires the optional peer dependency 'openai'. Install it: pnpm add openai",

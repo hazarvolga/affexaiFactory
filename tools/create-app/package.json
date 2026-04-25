@@ -1,0 +1,43 @@
+{
+  "name": "@affex/create-app",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Generator for new @affex apps. Layer-aware feature picker.",
+  "type": "module",
+  "bin": {
+    "create-app": "./dist/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --target node22 --clean",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@affex/shared-types": "workspace:*",
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@affex/shared-config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.5",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW",
+    "role": "tool"
+  }
+}

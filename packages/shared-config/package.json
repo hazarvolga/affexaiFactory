@@ -1,0 +1,40 @@
+{
+  "name": "@affex/shared-config",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Shared tsconfig, biome, vitest, and tsup presets for the @affex monorepo.",
+  "type": "module",
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./tsconfig.lib.json": "./tsconfig.lib.json",
+    "./tsconfig.app.json": "./tsconfig.app.json",
+    "./biome.json": "./biome.json",
+    "./vitest.config": "./vitest.config.ts",
+    "./tsup.config": "./tsup.config.ts"
+  },
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.lib.json",
+    "tsconfig.app.json",
+    "biome.json",
+    "vitest.config.ts",
+    "tsup.config.ts"
+  ],
+  "scripts": {
+    "build": "echo 'no build (config-only package)'",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests'",
+    "clean": "echo 'nothing to clean'"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@affex/_starter-next",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Reference Next.js 14 app wired with Layer 1 cores. Generator copies from this.",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3001",
+    "start": "next start -p 3001",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf .next .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@affex/ai-core": "workspace:*",
+    "@affex/observability-core": "workspace:*",
+    "@affex/shared-types": "workspace:*",
+    "next": "^14.2.20",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@affex/shared-config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW",
+    "role": "starter-reference"
+  }
+}

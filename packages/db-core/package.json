@@ -1,0 +1,46 @@
+{
+  "name": "@affex/db-core",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Prisma client factory + soft-delete + migration helpers for @affex apps.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@affex/observability-core": "workspace:*",
+    "@affex/shared-types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "peerDependenciesMeta": {
+    "@prisma/client": { "optional": true }
+  },
+  "devDependencies": {
+    "@affex/shared-config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@prisma/client": "^5.22.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW"
+  }
+}

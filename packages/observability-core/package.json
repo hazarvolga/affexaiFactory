@@ -1,0 +1,45 @@
+{
+  "name": "@affex/observability-core",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Logger (pino) + minimal OpenTelemetry init + optional Langfuse adapter for the @affex monorepo.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@affex/shared-types": "workspace:*",
+    "pino": "^9.6.0"
+  },
+  "peerDependencies": {
+    "langfuse": "^3.30.0"
+  },
+  "peerDependenciesMeta": {
+    "langfuse": { "optional": true }
+  },
+  "devDependencies": {
+    "@affex/shared-config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW"
+  }
+}

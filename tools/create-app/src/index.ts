@@ -1,12 +1,23 @@
 #!/usr/bin/env node
 import { execSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { SlugSchema } from '@affex/shared-types';
 import kleur from 'kleur';
 import prompts from 'prompts';
 
-const REPO_ROOT = resolve(process.cwd());
+function findRepoRoot(start: string): string {
+  let cur = resolve(start);
+  while (cur !== '/') {
+    if (existsSync(join(cur, 'pnpm-workspace.yaml'))) return cur;
+    const parent = dirname(cur);
+    if (parent === cur) break;
+    cur = parent;
+  }
+  return resolve(start);
+}
+
+const REPO_ROOT = findRepoRoot(process.cwd());
 
 interface TemplateDef {
   id: string;
@@ -75,43 +86,76 @@ function copyDir(
   }
 }
 
+function parseFlags(argv: string[]): { name?: string; template?: string; yes?: boolean } {
+  const out: { name?: string; template?: string; yes?: boolean } = {};
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === '--name' && argv[i + 1]) {
+      out.name = argv[++i];
+    } else if (arg?.startsWith('--name=')) {
+      out.name = arg.slice('--name='.length);
+    } else if (arg === '--template' && argv[i + 1]) {
+      out.template = argv[++i];
+    } else if (arg?.startsWith('--template=')) {
+      out.template = arg.slice('--template='.length);
+    } else if (arg === '--yes' || arg === '-y') {
+      out.yes = true;
+    }
+  }
+  return out;
+}
+
 async function main(): Promise<void> {
   console.log(kleur.bold().cyan('\n  @affex/create-app\n'));
 
-  const responses = await prompts(
-    [
-      {
-        type: 'text',
-        name: 'name',
-        message: 'app name (kebab-case)',
-        validate: (v: string) => {
-          const result = SlugSchema.safeParse(v);
-          return result.success || result.error.issues[0]?.message || 'invalid';
+  const flags = parseFlags(process.argv.slice(2));
+  const nonInteractive = flags.yes || (flags.name && flags.template);
+
+  let responses: { name: string; template: string; features: string[] };
+
+  if (nonInteractive && flags.name && flags.template) {
+    const slug = SlugSchema.safeParse(flags.name);
+    if (!slug.success) {
+      console.error(kleur.red(`✗ invalid name: ${slug.error.issues[0]?.message}`));
+      process.exit(1);
+    }
+    responses = { name: flags.name, template: flags.template, features: [] };
+  } else {
+    responses = (await prompts(
+      [
+        {
+          type: 'text',
+          name: 'name',
+          message: 'app name (kebab-case)',
+          validate: (v: string) => {
+            const result = SlugSchema.safeParse(v);
+            return result.success || result.error.issues[0]?.message || 'invalid';
+          },
         },
-      },
-      {
-        type: 'select',
-        name: 'template',
-        message: 'template',
-        choices: TEMPLATES.filter((t) => t.layer === 'ACTIVE_NOW').map((t) => ({
-          title: `${t.id}  ${kleur.dim(`— ${t.description}`)}`,
-          value: t.id,
-        })),
-      },
-      {
-        type: 'multiselect',
-        name: 'features',
-        message: 'features (Layer 1 only by default)',
-        instructions: false,
-        choices: FEATURES.map((f) => ({
-          title: `${f.id}  ${kleur.dim(f.package)}${f.layer === 'OPTIONAL_LATER' ? kleur.yellow(' [Layer 2 — needs promotion]') : ''}`,
-          value: f.id,
-          disabled: f.layer === 'OPTIONAL_LATER',
-        })),
-      },
-    ],
-    { onCancel: () => process.exit(1) },
-  );
+        {
+          type: 'select',
+          name: 'template',
+          message: 'template',
+          choices: TEMPLATES.filter((t) => t.layer === 'ACTIVE_NOW').map((t) => ({
+            title: `${t.id}  ${kleur.dim(`— ${t.description}`)}`,
+            value: t.id,
+          })),
+        },
+        {
+          type: 'multiselect',
+          name: 'features',
+          message: 'features (Layer 1 only by default)',
+          instructions: false,
+          choices: FEATURES.map((f) => ({
+            title: `${f.id}  ${kleur.dim(f.package)}${f.layer === 'OPTIONAL_LATER' ? kleur.yellow(' [Layer 2 — needs promotion]') : ''}`,
+            value: f.id,
+            disabled: f.layer === 'OPTIONAL_LATER',
+          })),
+        },
+      ],
+      { onCancel: () => process.exit(1) },
+    )) as { name: string; template: string; features: string[] };
+  }
 
   const template = TEMPLATES.find((t) => t.id === responses.template);
   if (!template) throw new Error(`unknown template: ${responses.template}`);

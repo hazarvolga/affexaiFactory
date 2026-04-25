@@ -160,7 +160,9 @@ Forbidden by policy: yarn, npm install, ESLint, Prettier, Lerna, Nx.
 | `pnpm test` (Vitest) | ✅ all suites pass (shared-types, observability-core, ai-core, db-core, doctor) |
 | `pnpm build` (Turbo) | ✅ 10/10 — ESM + CJS dual output for all libs; Next.js compile OK |
 | `pnpm dev --filter=@affex/_starter-nest` → curl `/health` | ✅ `{"status":"ok",...}` |
-| `pnpm create @affex/app` end-to-end | ⏳ smoke test pending (not yet dogfooded) |
+| `pnpm dev --filter=@affex/_starter-next` → curl `/api/health` | ✅ `{"service":"starter-next","status":"ok",...}` |
+| `pnpm create @affex/app --name smoke-test --template next-app` end-to-end | ✅ scaffolded, deps installed, dev came up, HTTP 200 |
+| GitHub Actions CI on push | ⚠️ workflow valid but runner not allocated (repo-side setup pending) |
 
 ---
 
@@ -179,13 +181,22 @@ For deeper guides see `docs/getting-started.md`, `docs/creating-a-new-app.md`, `
 
 ---
 
-## Open follow-ups (left for next session)
+## Layer 1 closure
 
-- Generator dogfood: run `pnpm create @affex/app smoke-test` end-to-end and confirm output builds.
-- Next.js starter dev smoke test in this session was skipped (Nest covered the package wiring).
-- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants (right now generator copies `apps/_starter-*` directly; tokens are token-replaced but no template-only files exist yet).
-- Push the latest checkpoint to `origin/main`.
+Following the previous checkpoint, three remaining acceptance items were closed:
+
+- ✅ **Next.js starter dev smoke** — `curl http://localhost:3001/api/health` → `{"service":"starter-next","status":"ok",...}`; `/` → HTTP 200.
+- ✅ **Generator dogfood** — `pnpm create @affex/app --name smoke-test --template next-app` produced `apps/smoke-test/`, deps installed, `pnpm dev` came up and answered HTTP 200. Generator gained `--name` / `--template` / `--yes` flags so it can run non-interactively (CI / scripts). Smoke output cleaned up after verification.
+- ⚠️ **CI on GitHub Actions** — workflow YAML is valid and triggered on push, but the runner was never allocated (`runner_name` empty, job failed in 1s). This is repo-side Actions setup (verification / billing / enabled-status), not a code problem. Resolve at https://github.com/hazarvolga/affexaiFactory/settings/actions.
+
+Both `tools/create-app` and `tools/doctor` had a `REPO_ROOT = process.cwd()` bug when launched via `pnpm --filter`; both now walk up to find the repo root by `pnpm-workspace.yaml`.
+
+## Open follow-ups (Layer 2 prep)
+
+- Resolve GH Actions runner allocation (browser-side setup) so CI can go green.
+- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants (right now generator copies `apps/_starter-*` directly; tokens replace where present, but starter source has no `__APP_NAME__` markers — generated apps still report the starter's service name).
 - First real product spike using the generator (validates the whole loop).
+- When the first deployable app arrives → activate Coolify + Verdaccio per `docs/layer-promotion.md`.
 
 ---
 

@@ -191,12 +191,37 @@ Following the previous checkpoint, three remaining acceptance items were closed:
 
 Both `tools/create-app` and `tools/doctor` had a `REPO_ROOT = process.cwd()` bug when launched via `pnpm --filter`; both now walk up to find the repo root by `pnpm-workspace.yaml`.
 
-## Open follow-ups (Layer 2 prep)
+## Layer 2 — first promotion bundle (auth-core + ui-kit + design-tokens)
+
+Triggered by: first authenticated app demand. Promoted via ADR 0004 + ADR 0005.
+
+| Item | Status | Notes |
+|---|---|---|
+| `@affex/design-tokens` | ACTIVE_NOW | Tailwind preset + CSS vars encoding `standards/DESIGN.md` |
+| `@affex/ui-kit` | ACTIVE_NOW | Button, Input, Label, Card primitives (shadcn pattern + Radix) |
+| `@affex/auth-core` | ACTIVE_NOW | argon2 password helpers + `jose` JWT + `getUserFromRequest` session helper |
+| Tailwind 3.4, shadcn/ui + radix, jose, argon2, lucide-react | ACTIVE_NOW | wired by the above |
+
+**Wired into starters:**
+- `_starter-next`: `/login` page (ui-kit + design-tokens), `/api/auth/sign-in` (argon2 + JWT), `/api/me` (session helper). Tailwind + tokens in `globals.css`.
+- `_starter-nest`: `JwtAuthGuard` + `/me` route using `getUserFromRequest`.
+
+**Verification (acceptance):**
+- `pnpm doctor` PASS (layer-check + stack-sync)
+- `pnpm lint` PASS (118 files; biome `unsafeParameterDecoratorsEnabled` override for NestJS)
+- `pnpm typecheck` PASS (21 packages)
+- `pnpm test` PASS (21 packages incl. happy-dom render tests for Button)
+- `pnpm build` PASS (13 targets; argon2 native binary externalized in `next.config.mjs`)
+- Smoke `_starter-next` + auth: `/login` renders, sign-in returns JWT, `/api/me` echoes user.
+- Smoke `_starter-nest` + auth: `/me` returns 401 unauth, returns user with valid JWT.
+
+## Open follow-ups (Layer 2 next steps)
 
 - Resolve GH Actions runner allocation (browser-side setup) so CI can go green.
-- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants (right now generator copies `apps/_starter-*` directly; tokens replace where present, but starter source has no `__APP_NAME__` markers — generated apps still report the starter's service name).
-- First real product spike using the generator (validates the whole loop).
-- When the first deployable app arrives → activate Coolify + Verdaccio per `docs/layer-promotion.md`.
+- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants (generator currently uses `apps/_starter-*` directly; starter source has no `__APP_NAME__` markers).
+- First real product spike using the generator + auth (validates whole loop end-to-end).
+- When first deployable app arrives → activate Coolify + Verdaccio per `docs/layer-promotion.md`.
+- Next L2 candidates: `queue-core` (BullMQ wrapper), `notification-core` (Resend), `testing-utils` (test-containers).
 
 ---
 

@@ -55,5 +55,15 @@
   },
   "organizeImports": {
     "enabled": true
-  }
+  },
+  "overrides": [
+    {
+      "include": ["apps/_starter-nest/**", "templates/nest-saas/**"],
+      "javascript": {
+        "parser": {
+          "unsafeParameterDecoratorsEnabled": true
+        }
+      }
+    }
+  ]
 }

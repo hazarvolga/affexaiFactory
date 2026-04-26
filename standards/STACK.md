@@ -37,7 +37,9 @@ Each row carries a layer status:
 | Zod 3 | ACTIVE_NOW | runtime validation + DTO source |
 | Redis 7 | OPTIONAL_LATER | trigger: first cache or queue need |
 | BullMQ 5 | OPTIONAL_LATER | trigger: first background job |
-| Auth.js / NextAuth 5 | OPTIONAL_LATER | trigger: first authenticated app |
+| Auth.js / NextAuth 5 | ACTIVE_NOW | wrapped by `@affex/auth-core` (ADR 0004) |
+| jose (JWT) | ACTIVE_NOW | dep of `@affex/auth-core` |
+| argon2 (password hash) | ACTIVE_NOW | dep of `@affex/auth-core` |
 | Stripe + Lemon Squeezy | OPTIONAL_LATER | trigger: first paid product |
 
 ## Frontend
@@ -46,8 +48,10 @@ Each row carries a layer status:
 |---|---|---|
 | Next.js 14 | ACTIVE_NOW | App Router |
 | React 18 | ACTIVE_NOW | comes with Next |
-| Tailwind CSS 3 | OPTIONAL_LATER | trigger: first frontend that needs styling |
-| shadcn/ui + radix | OPTIONAL_LATER | bundled with `@affex/ui-kit` activation |
+| Tailwind CSS 3 | ACTIVE_NOW | preset via `@affex/design-tokens` (ADR 0005) |
+| shadcn/ui + radix | ACTIVE_NOW | vendored into `@affex/ui-kit` (ADR 0005) |
+| class-variance-authority + tailwind-merge + clsx | ACTIVE_NOW | deps of `@affex/ui-kit` |
+| lucide-react (icons) | ACTIVE_NOW | dep of `@affex/ui-kit` |
 | TanStack Query 5 | OPTIONAL_LATER | trigger: first complex client data layer |
 
 ## Observability

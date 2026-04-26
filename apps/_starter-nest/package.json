@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@affex/ai-core": "workspace:*",
+    "@affex/auth-core": "workspace:*",
     "@affex/db-core": "workspace:*",
     "@affex/observability-core": "workspace:*",
     "@affex/shared-types": "workspace:*",

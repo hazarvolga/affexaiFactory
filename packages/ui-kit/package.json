@@ -1,0 +1,56 @@
+{
+  "name": "@affex/ui-kit",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "React component primitives (shadcn pattern + Radix) for @affex products.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --target node22 --clean --external react,react-dom",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --target node22 --watch --external react,react-dom",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@affex/design-tokens": "workspace:*",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@affex/shared-config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "happy-dom": "^15.11.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "affex": {
+    "layer": "ACTIVE_NOW"
+  }
+}

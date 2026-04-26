@@ -1,0 +1,10 @@
+@import "@affex/design-tokens/tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+}

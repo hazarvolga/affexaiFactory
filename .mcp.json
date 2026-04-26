@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "graphify": {
+      "command": "graphify",
+      "args": ["--mcp"],
+      "description": "Knowledge-graph X-ray of this repo. See ai/agents/claude-code/graphify.md.",
+      "env": {}
+    }
+  }
+}

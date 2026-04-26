@@ -5,7 +5,18 @@
 - Node.js 22 LTS (`nvm install 22 && nvm use`)
 - pnpm 9 (`corepack enable && corepack prepare pnpm@9 --activate`)
 - Docker (for the local dev stack)
+- Python 3.10+ + pip (for Graphify, the codebase X-ray skill — see below)
 - 1Password CLI (`brew install 1password-cli`) — for secrets, optional in local-only flows
+
+## One-time per-developer setup
+
+```bash
+# Graphify — codebase knowledge graph for fast Q&A (ADR 0006)
+pip install graphifyy
+graphify install              # installs to ~/.claude/skills/graphify/
+```
+
+Verify with `graphify --version`. Usage in `ai/agents/claude-code/graphify.md`.
 
 ## First clone
 

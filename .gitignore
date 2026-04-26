@@ -27,4 +27,5 @@ experimental/*
 
 ai/memory/runtime/
 ai/observability/data/
+ai/agents/claude-code/graph/
 infra/compose/.data/

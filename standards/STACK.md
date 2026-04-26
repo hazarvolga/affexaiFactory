@@ -76,7 +76,7 @@ Each row carries a layer status:
 | Aider | OPTIONAL_LATER | trigger: pair-programming workflow need |
 | Promptfoo | OPTIONAL_LATER | trigger: first prompt regression baseline |
 | LangGraph | OPTIONAL_LATER | trigger: multi-step workflow need |
-| Graphify | OPTIONAL_LATER | trigger: codebase Q&A or migration audit |
+| Graphify | ACTIVE_NOW | per-user Claude Code skill + project MCP (ADR 0006); install: `pip install graphifyy && graphify install` |
 | OpenHands | SCALE_STAGE | trigger: 3+ parallel autonomous agents |
 | mem0 / Serena memory | SCALE_STAGE | trigger: cross-session agent memory |
 

@@ -215,12 +215,30 @@ Triggered by: first authenticated app demand. Promoted via ADR 0004 + ADR 0005.
 - Smoke `_starter-next` + auth: `/login` renders, sign-in returns JWT, `/api/me` echoes user.
 - Smoke `_starter-nest` + auth: `/me` returns 401 unauth, returns user with valid JWT.
 
+## First product (`apps/first-app`) — full loop validated
+
+Generated 2026-04-26 via `pnpm create @affex/app --name first-app --template next-app`.
+
+- ✅ Scaffold + install in 9.7s
+- ✅ Build PASS (5 routes: 2 static, 3 dynamic API)
+- ✅ Smoke (6/6 endpoints):
+  - `/api/health` → 200
+  - `/login` → HTTP 200 (HTML)
+  - `POST /api/auth/sign-in` correct creds → JWT (228 chars)
+  - `POST /api/auth/sign-in` wrong creds → 401
+  - `/api/me` no token → 401
+  - `/api/me` valid token → `{"ok":true,"user":{"id":"demo-user","email":"demo@affex.dev","scope":["user"]}}`
+
+This proves the full pipeline: generator → Layer 1 base + Layer 2 (auth-core + ui-kit + design-tokens) → working authenticated app.
+
+**Known cosmetic issue:** `/api/health` of generated apps reports `service: "starter-next"` because `_starter-next` source has no `__APP_NAME__` token markers. Token-bearing template variants (`templates/{nest-saas,next-app}/`) will fix this — still a follow-up.
+
 ## Open follow-ups (Layer 2 next steps)
 
+- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants so generated apps report their own `service` name.
 - Resolve GH Actions runner allocation (browser-side setup) so CI can go green.
-- Add `templates/nest-saas/` and `templates/next-app/` token-bearing variants (generator currently uses `apps/_starter-*` directly; starter source has no `__APP_NAME__` markers).
-- First real product spike using the generator + auth (validates whole loop end-to-end).
-- When first deployable app arrives → activate Coolify + Verdaccio per `docs/layer-promotion.md`.
+- When `first-app` becomes deployable → activate Coolify + Verdaccio per `docs/layer-promotion.md`.
+- Next L2 candidates (when consumer demands): `queue-core` (BullMQ), `notification-core` (Resend), `testing-utils` (test-containers), `billing-core` (Stripe).
 - Next L2 candidates: `queue-core` (BullMQ wrapper), `notification-core` (Resend), `testing-utils` (test-containers).
 
 ---
